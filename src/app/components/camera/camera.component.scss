@@ -1,0 +1,99 @@
+.app-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 100%;
+    // padding: 20px;
+    font-family: 'Arial', sans-serif;
+  
+    header {
+      width: 100%;
+      box-sizing: border-box;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      background-color: #002855;
+      color: white;
+  
+      .logo {
+        width: 125px;
+        height: auto;
+        margin-right: 10px;
+      }
+    }
+  
+    main {
+      width: 100%;
+      max-width: 600px;
+      text-align: center;
+      padding: 10px;
+  
+      video {
+        width: 75%;
+        border: 1px solid #ccc;
+        margin-bottom: 10px;
+      }
+  
+      button {
+        margin: 5px;
+        padding: 10px;
+        font-size: 16px;
+      }
+  
+      img {
+        width: 75%;
+        max-width: 600px;
+        margin: 10px auto; /* Center the image horizontally */
+      }
+    }
+  
+    footer {
+      width: 100%;
+      text-align: center;
+      padding: 20px;
+      background-color: #002855;
+      color: white;
+      position: absolute;
+      bottom: 0;
+  
+      p {
+        margin: 0;
+        font-size: 14px;
+      }
+    }
+  }
+
+.file-upload-button,
+.file-upload-input {
+  height: 40px; /* Adjust the height as needed */
+  width: 120px; /* Adjust the width as needed */
+  /* Add additional styling as needed */
+}
+  
+  /* Responsive Styles */
+  @media only screen and (max-width: 600px) {
+    .app-container {
+      padding: 10px;
+  
+      header {
+        flex-direction: column;
+        text-align: center;
+  
+        .logo {
+          margin-bottom: 10px;
+        }
+      }
+  
+      main {
+        max-width: 100%;
+      }
+    }
+  }
+  
+  .menu{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items:center;
+  }

@@ -1,0 +1,40 @@
+<div class="app-container">
+    <header>
+      <a href="https://www.platesmart.com/">
+        <img class="logo" src="https://drive.google.com/uc?export=view&id=193BKspQQkD6NjbdM09Y1DoojuE-UvRz3" alt="Logo">
+      </a>
+    </header>
+  
+    <main>
+      <ng-container *ngIf="!showCamera && showScan">
+        <button (click)="showUploadMenu()">Scan License Plate</button>
+        <div *ngIf="showMenu" class="menu">
+          <button  class="file-upload-button" (click)="startCamera()">Use Camera</button>
+          <input type="file" class="file-upload-input" (change)="uploadImage($event)" accept="image/*" />
+        </div>
+      </ng-container>
+      <div *ngIf="!capturedImage && !showScan">
+        <video *ngIf="showCamera" #videoElement autoplay></video>
+      </div>
+  
+      <ng-container *ngIf="capturedImage && !showScan">
+        <img #imagePreview [src]="capturedImage" alt="Captured Image Preview">
+        <div class="menu">
+          <button (click)="confirmAndSend()">Confirm and Send</button>
+          <button *ngIf="isImageCaptured" (click)="startCamera()">Retry</button>
+          <input *ngIf="isImageUpload" type="file" class="file-upload-input" (change)="uploadImage($event)" accept="image/*" />
+          <button (click)="licenseScan()">Cancel</button>
+        </div>
+      </ng-container>
+  
+      <ng-container *ngIf="stream && stream?.active">
+        <button (click)="stopCamera(); this.licenseScan();">Stop Camera</button>
+        <button (click)="captureImage()">Capture Image</button>
+      </ng-container>
+    </main>
+  
+    <footer>
+      <p>&copy; Copyright 2006-2022 Cyclops Technologies, Inc.</p>
+    </footer>
+  </div>
+  
