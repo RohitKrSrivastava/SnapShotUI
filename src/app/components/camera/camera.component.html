@@ -1,40 +1,131 @@
 <div class="app-container">
-    <header>
-      <a href="https://www.platesmart.com/">
-        <img class="logo" src="https://drive.google.com/uc?export=view&id=193BKspQQkD6NjbdM09Y1DoojuE-UvRz3" alt="Logo">
-      </a>
-    </header>
-  
-    <main>
-      <ng-container *ngIf="!showCamera && showScan">
-        <button (click)="showUploadMenu()">Scan License Plate</button>
-        <div *ngIf="showMenu" class="menu">
-          <button  class="file-upload-button" (click)="startCamera()">Use Camera</button>
-          <input type="file" class="file-upload-input" (change)="uploadImage($event)" accept="image/*" />
-        </div>
-      </ng-container>
-      <div *ngIf="!capturedImage && !showScan">
-        <video *ngIf="showCamera" #videoElement autoplay></video>
+  <!-- Header -->
+  <header>
+    <a href="https://www.platesmart.com/">
+      <img src="https://drive.google.com/uc?export=view&id=193BKspQQkD6NjbdM09Y1DoojuE-UvRz3"
+           alt="Logo" style="max-width: 150px; height: auto; display: block; margin: 0 auto; word-wrap: break-word">
+    </a>
+  </header>
+
+  <main>
+    <ng-container *ngIf="!showCamera && showScan">
+      <button mat-raised-button [matMenuTriggerFor]="menu">
+        <mat-icon>screenshot_region</mat-icon>
+        Scan License Plate
+      </button>      
+      <mat-menu #menu="matMenu">
+        <button mat-menu-item (click)="startCamera()">
+          <mat-icon>camera_alt</mat-icon> Use Camera
+        </button>
+        <button mat-menu-item (click)="imageInput.click()">
+          <mat-icon>cloud_upload</mat-icon> Upload Image
+          <input #imageInput type="file" (change)="uploadImage($event)" accept="image/*" style="display: none;" />
+        </button>
+      </mat-menu>
+    </ng-container>
+    
+    
+
+    <ng-container *ngIf="!capturedImage && !showScan && showCamera">
+      <div class="card-container mobile-video">
+        <mat-card >
+          <video *ngIf="showCamera" #videoElement autoplay >
+          </video>
+          <div class="box"> </div>
+          <mat-card-actions class="video-action">
+              <ng-container *ngIf="stream && stream?.active">
+                <button class="actions" color="primary" mat-fab (click)="captureImage()" matTooltip="Capture Image">
+                  <mat-icon>camera_alt</mat-icon>
+                </button>
+                <button class="actions" mat-fab color="warn" (click)="stopCamera(); licenseScan()" matTooltip="Stop Camera">
+                  <mat-icon>home</mat-icon>
+                </button>
+              </ng-container>
+            </mat-card-actions>
+        </mat-card>
       </div>
-  
-      <ng-container *ngIf="capturedImage && !showScan">
-        <img #imagePreview [src]="capturedImage" alt="Captured Image Preview">
-        <div class="menu">
-          <button (click)="confirmAndSend()">Confirm and Send</button>
-          <button *ngIf="isImageCaptured" (click)="startCamera()">Retry</button>
-          <input *ngIf="isImageUpload" type="file" class="file-upload-input" (change)="uploadImage($event)" accept="image/*" />
-          <button (click)="licenseScan()">Cancel</button>
-        </div>
-      </ng-container>
-  
-      <ng-container *ngIf="stream && stream?.active">
-        <button (click)="stopCamera(); this.licenseScan();">Stop Camera</button>
-        <button (click)="captureImage()">Capture Image</button>
-      </ng-container>
-    </main>
-  
-    <footer>
-      <p>&copy; Copyright 2006-2022 Cyclops Technologies, Inc.</p>
-    </footer>
-  </div>
-  
+    </ng-container>
+
+    <mat-spinner class="special-spinner" *ngIf="isApiCalled"></mat-spinner>
+
+    <ng-container *ngIf="capturedImage && !showScan && isImageUpload">
+      <div class="card-container">
+        <mat-card class="example-card">
+          <ng-container *ngIf="!isDataSaved; else savedDataContent">
+            <img mat-card-image #imagePreview [src]="capturedImage" alt="Captured Image Preview">
+            <mat-card-content>
+              <table>
+                <tbody>
+                  <tr>
+                    <td><strong>Region: </strong></td>
+                    <td class="fields">
+                      <ng-container *ngIf="!editCode; else editCodeContent">
+                        {{ plate.code }}
+                      </ng-container>
+                      <ng-template #editCodeContent>
+                        <input matInput [(ngModel)]="plate.code" />
+                      </ng-template>
+                      <mat-icon class="edit-icon" *ngIf="editMode" (click)="toggleEditMode('code')">{{editCode ? 'check':'edit'}}</mat-icon>
+                    </td>
+                  </tr>
+    
+                  <tr>
+                    <td><strong>Plate No: </strong></td>
+                    <td class="fields">
+                      <ng-container *ngIf="!editTag; else editTagContent">
+                        {{ plate.tag }}
+                      </ng-container>
+                      <ng-template #editTagContent>
+                        <input matInput  [(ngModel)]="plate.tag" />
+                      </ng-template>
+                      <mat-icon class="edit-icon" *ngIf="editMode" (click)="toggleEditMode('tag')">{{editTag ? 'check':'edit'}}</mat-icon>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </mat-card-content>
+          </ng-container>
+          <ng-template #savedDataContent>
+            <svg width="100" height="100" xmlns="http://www.w3.org/2000/svg">
+              <image mat-card-image href="../../../assets/svg/car.svg" width="100%" height="100%" />
+            </svg>
+            <mat-card-content>
+              <table>
+                <tbody>
+                  <tr>
+                    <td><strong>Confirmation:</strong></td>
+                    <td>11192352US3</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Rental Agreement:</strong></td>
+                    <td>U49002806</td>
+                  </tr>
+                </tbody>
+              </table>
+            </mat-card-content>
+          </ng-template>
+          <mat-card-actions>
+            <button class="actions" *ngIf="!editMode && !isDataSaved" mat-mini-fab color="accent" aria-label="Edit" (click)="editImageData()" [disabled]="saveDataLoader" matTooltip="Edit">
+              <mat-icon>edit</mat-icon>
+            </button>
+            
+            <button class="actions" *ngIf="!isDataSaved" mat-fab aria-label="Save" color="primary" (click)="saveData()" [disabled]="saveDataLoader || editCode || editTag" matTooltip="Save">
+              <mat-icon *ngIf="!saveDataLoader">check</mat-icon>
+              <mat-spinner [diameter]="20" *ngIf="saveDataLoader"></mat-spinner>
+            </button>
+            
+            <button class="actions" mat-mini-fab aria-label="Close" color="warn" (click)="licenseScan()" [disabled]="saveDataLoader || editCode || editTag" matTooltip="Close">
+              <mat-icon>home</mat-icon>
+            </button>
+            
+          </mat-card-actions>
+        </mat-card>
+      </div>
+    </ng-container>
+
+  </main>
+
+  <footer>
+    <p>&copy; Copyright 2006-2022 Cyclops Technologies, Inc.</p>
+  </footer>
+</div>

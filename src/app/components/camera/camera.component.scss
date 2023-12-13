@@ -3,9 +3,10 @@
     flex-direction: column;
     align-items: center;
     height: 100%;
-    // padding: 20px;
+    overflow: hidden;
     font-family: 'Arial', sans-serif;
   
+    
     header {
       width: 100%;
       box-sizing: border-box;
@@ -15,12 +16,15 @@
       padding: 20px;
       background-color: #002855;
       color: white;
+      position: fixed;
   
       .logo {
         width: 125px;
         height: auto;
         margin-right: 10px;
       }
+
+      
     }
   
     main {
@@ -28,24 +32,193 @@
       max-width: 600px;
       text-align: center;
       padding: 10px;
-  
-      video {
-        width: 75%;
-        border: 1px solid #ccc;
-        margin-bottom: 10px;
+      flex: 1;
+      margin: 10px;
+      width: 100%;
+      max-height: 60vh; /* Set maximum height to 80% of the viewport height */
+      box-sizing: border-box;
+      position: relative;
+      top: 10%;
+
+      .button-container {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap; 
+        justify-content: center;
       }
-  
-      button {
-        margin: 5px;
-        padding: 10px;
+
+      .edit-icon{
         font-size: 16px;
+        height: 15px;
+        width: 18px;
       }
-  
       img {
-        width: 75%;
+        width: 60%;
         max-width: 600px;
-        margin: 10px auto; /* Center the image horizontally */
+        margin: 10px auto; 
       }
+      .example-card {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: none;
+
+        .card-container {
+          width: 100%;
+          box-sizing: border-box;
+          margin: 10px;
+        }
+        
+        .mat-card {
+          width: 100%;
+          box-sizing: border-box;
+          margin: 10px 0;
+        }
+        
+        /* Responsive styling for image within mat-card */
+        img[mat-card-image] {
+          width: 100%;
+          height: 15rem;
+        }
+        
+        /* Responsive styling for mat-card-content */
+        mat-card-content {
+          text-align: center;
+        }
+        
+      }
+
+
+      .actions{
+        margin: 5px;
+      }
+      .video-action{
+        display: flex;
+        justify-content: center; 
+      }
+     
+      .rectangular-box {
+        position: absolute;
+        width: 80%;
+        height: 40%;
+        background-color: transparent;
+        border: 2px dashed #39FF14;
+        top: 17%;
+        left: 10%;
+
+        @media only screen and (min-aspect-ratio: 2/1) {
+          height: 50%;
+        }
+      
+        &:before,
+        &:after {
+          content: '';
+          position: absolute;
+          width: 10px;
+          height: 10px;
+          border: 2px double #39FF14;
+        }
+      
+        &:before {
+          top: -5px;
+          left: -5px;
+        }
+      
+        &:after {
+          bottom: -5px;
+          right: -5px;
+        }
+
+        @media only screen and (max-width: 600px) {
+          width: 70%;
+          height: 30%;
+          top: 20%;
+          left: 15%;
+          bottom: 20%;
+          right: 10%;
+        }
+      }
+
+      .box {
+        --b: 3px;   /* thickness of the border */
+        --c: #39FF14;   /* color of the border */
+        --w: 20px;  /* width of border */
+        --r: 25px;  /* radius */
+        
+      
+        padding: var(--b); /* space for the border */
+        width: 80%;
+        height: 40%;
+        box-sizing: border-box;
+        margin: 20% 10%;
+        display: inline-flex;
+        font-size: 30px;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        position: absolute;
+      }
+      .box::before {
+        content :"";
+        position: absolute;
+        inset: 0;
+        background: var(--c,red);
+        --_g: #0000 90deg,#000 0;
+        --_p: var(--w) var(--w) no-repeat;
+        --mask:
+          conic-gradient(from 90deg  at top    var(--b) left  var(--b),var(--_g)) 0    0    / var(--_p),
+          conic-gradient(from 180deg at top    var(--b) right var(--b),var(--_g)) 100% 0    / var(--_p),
+          conic-gradient(from 0deg   at bottom var(--b) left  var(--b),var(--_g)) 0    100% / var(--_p),
+          conic-gradient(from -90deg at bottom var(--b) right var(--b),var(--_g)) 100% 100% / var(--_p);
+          -webkit-mask: var(--mask);
+                  mask: var(--mask);
+      }
+      video, img {
+        text-align: center;
+        font-family: cursive;
+        font-size: 24px;
+        border: 10px solid transparent; /* Set border to transparent initially */
+        min-height: 3em;
+        resize: both;
+        background: linear-gradient(to top, rgba(207, 236, 255, 0.3), rgba(249, 247, 217, 0.3), rgba(252, 226, 206, 0.3), rgba(255, 193, 243, 0.3));
+        box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+        
+        /* Additional beautifications */
+        border-radius: 10px; /* Adjust the value as needed */
+        transition: background 0.3s ease, border 0.5s ease; /* Add smooth transitions */
+        overflow: hidden; /* Hide overflowing content */
+    
+        /* Animation for the border */
+        animation: borderAnimation 2s infinite alternate;
+    }
+    
+    @keyframes borderAnimation {
+        0% {
+            border-image: linear-gradient(to right, #3f51b5, #ff4081);
+        }
+        100% {
+            border-image: linear-gradient(to right, #ff4081, #3f51b5);
+        }
+    }
+    
+
+      // video, img {
+      //   text-align: center;
+      //   font-family: cursive;
+      //   font-size: 24px;
+      //   border: 10px solid #3f51b5;
+      //   // padding: 2rem 1rem;
+      //   min-height: 3em;
+      //   // width: 60%;
+      //   resize: both;
+      //   background: linear-gradient(to top, rgba(#cfecff, 0.3), rgba(#f9f7d9, 0.3), rgba(#fce2ce, 0.3), rgba(#ffc1f3, 0.3));
+      //   box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+        
+      //   /* Additional beautifications */
+      //   border-radius: 10px; /* Adjust the value as needed */
+      //   transition: background 0.3s ease; /* Add smooth transition on background change */
+      //   overflow: hidden; /* Hide overflowing content */
+      // }
     }
   
     footer {
@@ -54,7 +227,8 @@
       padding: 20px;
       background-color: #002855;
       color: white;
-      position: absolute;
+      box-sizing: border-box;
+      position: fixed;
       bottom: 0;
   
       p {
@@ -62,19 +236,17 @@
         font-size: 14px;
       }
     }
+   
   }
 
 .file-upload-button,
 .file-upload-input {
-  height: 40px; /* Adjust the height as needed */
-  width: 120px; /* Adjust the width as needed */
-  /* Add additional styling as needed */
+  height: 27px;
+  width: 87px;
 }
-  
-  /* Responsive Styles */
+
   @media only screen and (max-width: 600px) {
     .app-container {
-      padding: 10px;
   
       header {
         flex-direction: column;
@@ -87,7 +259,23 @@
   
       main {
         max-width: 100%;
+
+        .card-container {
+          flex-direction: column; /* Stack items vertically on smaller screens */
+        }
+
+        
+        .mobile-video{
+          padding: 0 40px
+        }
+
+        .mat-card {
+          margin: 5px; /* Adjust margin for smaller screens */
+        }
       }
+    }
+    .button-container {
+      flex-direction: column; 
     }
   }
   
@@ -96,4 +284,16 @@
     flex-direction: column;
     justify-content: center;
     align-items:center;
+  }
+
+  ::ng-deep .mat-mdc-progress-spinner.special-spinner {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+  
+  .example-button-container {
+    display: flex;
+    justify-content: center;
   }
